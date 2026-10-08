@@ -1,11 +1,13 @@
-# This Program Is To Implement An Working Banking System.
+# This program is to implement an banking system using just python.
 
+# Necessary imports.
 import os
 import subprocess
 import random
 from datetime import datetime
 import sys
 
+# Hardcode the file paths.
 pin_set = set()
 user_DB = r'Users_DB.txt'
 pin_DB = r'Account_Pin_DB.txt'
@@ -25,11 +27,13 @@ class bank:
 
     def account_registry(self, object_key = '', object_name = ''):
         self.account_name_dict[object_key] = object_name
+        
+    # This method is used to get the unique_account_number.
     def get_serial(self):
-        curr_serial = len(self.account_name_dict)    # Get The Current Serial No.
-        next_serial = curr_serial + 1                # Get The Next Serial No.
-        dynamic_serial = f"{next_serial:05d}"        # Convert The Serial To Be Dynamic, To Fit In 5 Digits.
-        return dynamic_serial                        # Return The Dynamic Serial Number.
+        curr_serial = len(self.account_name_dict)    # get the current serial no.
+        next_serial = curr_serial + 1                # get the next serial no.
+        dynamic_serial = f"{next_serial:05d}"        # convert the serial to be dynamic, to dit in 5 digits.
+        return dynamic_serial                        # return the dynamic serial number.
 
 class customer:
     def __init__(self, name = '', age = 1, acc_no = '0'):
@@ -40,6 +44,9 @@ class customer:
     def show(self):
         print(f"Hello {self.Customer_name} Your {state_bank.account_name_dict[self.Acc_no].account_type} Account Is Active.")
 
+# We will be offering two diffrent type of accounts,
+# both will have thier own unique features.
+
 class business_account:
     account_type = 'business'
 
@@ -48,11 +55,13 @@ class business_account:
         self.acc_balance = acc_balance
         self.acc_pin = acc_pin
 
+    # This method will check the user entered PIN against the account's pin.
     def validate_pin(self):
         print("Please Enter Your Accounts 6 Digits Pin Number (------)")
         while True:
             print("Enter Your Pin, Or Enter 0 To Exit.")
             try:
+                # Return an empty string if the attempt is failed.
                 user_pin = input("-->")
                 if user_pin == '0':
                     return ''
@@ -66,9 +75,11 @@ class business_account:
                     print("Sorry Your Pin Is Not Matching, Please Try Again.")
                     continue
                 else:
+                    # If the PIN matched, return it for further use.
                     return user_pin
-            except:
-                print("Invaild Input Type, Please Try Again.")
+            except ValueError as e:
+                print(e)
+                print("Invalid Input Type, Please Try Again.")
                 continue
 
     def deposit(self, money = 0):
@@ -80,7 +91,7 @@ class business_account:
         elif self.account_type == 'savings':
             with open(temp_sav_db, 'a') as file:
                 file.write(f"{self.acc_no},{self.acc_balance},{self.with_limit}\n")
-        # Asking If The User Wants To Know Their Balance.
+        # Asking if the user wanted to know their balance.
         print("Money Depositted Successfully.\nDo You Want To See Your Balance?")
         while True:
             print("Type: 1 --> (See Balance)")
@@ -92,7 +103,8 @@ class business_account:
                     continue
                 else:
                     break
-            except:
+            except ValueError as e:
+                print(e)
                 print("Invalid Input Type, Please Try Again.")
                 continue
         if temp == 1:
@@ -120,7 +132,8 @@ class business_account:
                         continue
                     else:
                         break
-                except:
+                except ValueError as e:
+                    print(e)
                     print("Invaild Input Type, Please Try Again.")
                     continue
         
@@ -137,7 +150,7 @@ class business_account:
                 __ = input("Please Hit (Enter) --> Exit")
                 return
             else:
-                # Code Get Mathced With The Accounts 6 Digit Pin.
+                # Code get mathced with the accounts 6 digit PIN.
                 while True:
                     try:
                         temp = int(input("Please Enter The Amount To Withdraw From Your Buissess Accout, Enter 0 To Exit : "))
@@ -151,13 +164,15 @@ class business_account:
                             continue
                         else:
                             break
-                    except:
+                    except ValueError as e:
+                        print(e)
                         print("Invalid Input Type, Please Try Again.")
                         continue
                 self.acc_balance = self.acc_balance - temp
                 print("Processing.....\n",temp,"Is Successfully Withdrawed.")
                 with open(temp_bus_db, 'a') as file:
                     file.write(f"{self.acc_no},{self.acc_balance}\n")
+        # Asking the user if they wanted to know their account balance.
         print("Do You Want To See Your Balance?")
         while True:
             print("Type: 1 --> (See Balance)")
@@ -169,7 +184,8 @@ class business_account:
                     continue
                 else:
                     break
-            except:
+            except ValueError as e:
+                print(e)
                 print("Invalid Input Type, Please Try Again.")
                 continue
         if temp == 1:
@@ -179,8 +195,9 @@ class business_account:
 
 class saving_account(business_account):
     account_type = 'savings'
+    # Now saving account will have its own unique constraints.
     withdraw_limit = 25000
-    annual_intrest = 6.7
+    annual_interest = 6.7
     acc_withdraw_limit = 3
     charge = 99
     min_balance = 1500.00
@@ -190,10 +207,10 @@ class saving_account(business_account):
         self.with_limit = acc_with_limit
 
     def compounding(self):
-        monthly_rate = (self.annual_intrest/12) / 100
+        monthly_rate = (self.annual_interest/12) / 100
         curr_balance = self.acc_balance
-        intrest_earned = curr_balance * monthly_rate
-        self.acc_balance += intrest_earned
+        interest_earned = curr_balance * monthly_rate
+        self.acc_balance += interest_earned
 
     def withdraw(self):
         clear_terminal()
@@ -215,7 +232,8 @@ class saving_account(business_account):
                             continue
                         else:
                             break
-                    except:
+                    except ValueError as e:
+                        print(e)
                         print("Invalid Input Type, Please Try Again.")
                         continue
                 if user_op == 2:
@@ -228,7 +246,7 @@ class saving_account(business_account):
                 print("Please Hit (Enter) --> Exit")
                 return
             else:
-                # Code Get Mathced With The Accounts 6 Digit Pin.
+                # Code get mathced with the accounts 6 digit PIN.
                 while True:
                     try:
                         temp = int(input("Please Enter The Amount To Withdraw From Your Savings Account, Type 0 To Exit : "))
@@ -255,7 +273,8 @@ class saving_account(business_account):
                                 continue
                             else:
                                 break
-                    except:
+                    except ValueError as e:
+                        print(e)
                         print("Invalid Input Type, Please Try Again.")
                         continue
 
@@ -279,7 +298,8 @@ class saving_account(business_account):
                     continue
                 else:
                     break
-            except:
+            except ValueError as e:
+                print(e)
                 print("Invalid Input Type, Please Try Again.")
                 continue
         if temp == 1:
@@ -293,11 +313,12 @@ def generate_pin():
         if new_pin not in pin_set:
             pin_set.add(new_pin)
             return new_pin
-# Updating The Savings Account In Monthly Basis.
+            
+# Updating the savings account in monthly basis.
 def get_pin_list():
     pin_list = []
-    global pin_set
-    global pin_DB
+    pin_set
+    pin_DB
     if not os.path.exists(pin_DB) or os.path.getsize(pin_DB) == 0:
         print("Failed To Fetch The Info From The Pin Data Base!")
         return pin_list
@@ -318,24 +339,25 @@ def get_pin_list():
                 pin_set.add(acc_pin)
     return pin_list
 
-def update_monthly_intrest():
-    # Check if today's date is exactly day 1
+    
+def update_monthly_inetrest():
+    # Check if today's date is exactly day-1
     today = datetime.now()
     if today.day != 1:
         # If it's not the 1st of the month, immediately stop and do nothing!
         return 
     print("Windows Scheduler Activated, Batch Processing Starting...")
 
-    global saving_DB
+    saving_DB
     # Quick safety check: if the database file doesn't exist yet, stop early.
     if not os.path.exists(saving_DB) or os.path.getsize(saving_DB) == 0:
         print("Failed To Find The Saving Accounts Data Base!")
         return
-    # Move Forward Only When Both The Cases Are Checked.
+    # Move forward only when both the cases are checked.
     else:
-        # READ & REBUILD: Turn data lines back into live Python Objects.
+        #Turn the data lines back into live python objects.
         
-        # Get The Pin List, Using the method.
+        # Get the PIN list, using the method.
         pin_list = get_pin_list()
         if pin_list:        
             is_pin_gone = False
@@ -362,7 +384,7 @@ def update_monthly_intrest():
                     Account_obj = saving_account(acc_no, acc_balance, acc_pin, acc_with_limit)
                     active_objects_list.append(Account_obj)
 
-        # Coumpounding/Updating Balance For Each Account.
+        # Compound and update the balance for each account.
         for items in active_objects_list:
             items.compounding()
             items.with_limit = 0
@@ -374,25 +396,21 @@ def update_monthly_intrest():
         print(f"Success! Consecutively updated {len(active_objects_list)} accounts.")
         sys.exit()
 
-# Clear The Terminal.
 def clear_terminal():
-    # 'cls' for Windows, 'clear' for Mac/Linux
     cmd = 'cls' if os.name == 'nt' else 'clear'
-    
-    # Securely executes the command without opening a vulnerable shell
     subprocess.run(cmd, shell=True)
 
-# Populating The Savings Accounts.
+# Populating the savings accounts.
 def populate_savings_acc():
-    global saving_DB
-    # Check If The DataBase Exists.
+    saving_DB
+    # Check if the dataBase exists.
     if not os.path.exists(saving_DB) or os.path.getsize(saving_DB) == 0:
         print("Failed To Fetch The Info From The Account Data Base!")
         return
-    # If Both The Conditions Check, Now Move Forward.
+    # If both the conditions check, now move forward.
     else:
         with open(saving_DB, 'r') as file:
-            # Iterate Over Each Lines.
+            # Iterate over each lines.
             pin_list = get_pin_list()
             if pin_list:
                 is_pin_gone = False
@@ -401,9 +419,9 @@ def populate_savings_acc():
             
             for lines in file:
                 lines = lines.strip() 
-                # Check Only Where The Lines Are Not Empty.
+                # Check only where the lines are not empty.
                 if lines:
-                    # Fetch The Acc_no & Acc_balance.
+                    # Fetch the acc_no & acc_balance.
                     acc_no, acc_balance, acc_with_limit = lines.split(',')
                     acc_no = acc_no.strip()
                     acc_balance = acc_balance.strip()
@@ -419,7 +437,7 @@ def populate_savings_acc():
                     object_key = saving_account(acc_no, acc_balance, acc_pin, acc_with_limit)
                     state_bank.account_registry(str(acc_no), object_key)
 
-    # Updaing The Account Balance According To The Temp DB.
+    # Updaing the account balance according to the temp DB.
     if not os.path.exists(temp_sav_db) or os.path.getsize(temp_sav_db) == 0:
         print("The Temporary Data Base Is Either Missing, Or Nothing Was Updated In The Last Execution.")
         return
@@ -440,14 +458,14 @@ def populate_savings_acc():
         with open(temp_sav_db, 'w') as file:
             file.write("")
 
-# Populating The Business Accounts.
+# Populating the business accounts.
 def populate_business_acc():
-    global business_DB
-    # Chack If The DataBase Exists.
+    business_DB
+    # Chack if the dataBase exists.
     if not os.path.exists(business_DB) or os.path.getsize(business_DB) == 0:
         print("Failed To Fetch The Account Info From The Data Base.")
         return
-    # If Both Condition Checked Now Move Forward.
+    # If both condition checked now move forward.
     else:
         with open(business_DB, 'r') as file:
             pin_list = get_pin_list()
@@ -458,9 +476,9 @@ def populate_business_acc():
 
             for lines in file:
                 lines = lines.strip()
-                # Check Only Where Lines Are Not Empty.
+                # Check only where lines are not empty.
                 if lines:
-                    # Fetch The Acc_no & Acc_balance.
+                    # Fetch the acc_no & acc_balance.
                     acc_no, acc_balance = lines.split(',')
                     acc_no = acc_no.strip()
                     acc_balance = acc_balance.strip()
@@ -492,9 +510,9 @@ def populate_business_acc():
         with open(temp_bus_db, 'w') as file:
             file.write("")
 
-# Populating The Previous Users.
+# Populating the previous users.
 def populate_users():
-    global user_DB
+    user_DB
     if not os.path.exists(user_DB) or os.path.getsize(user_DB) == 0:
         print("Failed To Find The User Data Base!")
         return
@@ -511,7 +529,7 @@ def populate_users():
                     curr_user = customer(user_name,user_age,user_acc)
                     state_bank.user_entry(user_acc, curr_user)
 
-# Generate A Unique Account No.
+# Generate a unique account no.
 def get_acc_no(acc_type = 0):
     if acc_type == 1:
         acc_no = f"SAV{state_bank.get_serial()}"
@@ -519,7 +537,7 @@ def get_acc_no(acc_type = 0):
         acc_no = f"BUI{state_bank.get_serial()}"
     return acc_no
 
-# Create Your Account.
+# Create your account.
 def open_acc():
     while True:
         clear_terminal()
@@ -534,9 +552,9 @@ def open_acc():
         else:
             break
 
-    # So We Are Going To Set:
-    # Business Account Will Always Starts From Balance = 0.0,
-    # Where As The Savings Account Will Always Starts From Balance = 3000.0,
+    # So we are going to set:
+    # business account will always starts from balance = 0.0,
+    # where as the savings account will always starts from balance = 3000.0,
     acc_no = get_acc_no(acc_type)
     acc_pin = generate_pin()
     if acc_type == 1:
@@ -555,7 +573,7 @@ def open_acc():
 
     
 
-# Create New Customer Objects, And Assign Them Thier Account No.
+# Create new customer objects, and assign them thier account no.
 def new_user():
         print("Hello New Customer, Welcome To Our State Bank.")
         user_name = input("Please Fill Your Full Name : ")
@@ -570,8 +588,9 @@ def new_user():
                     continue
                 else:
                     break
-            except:
+            except ValueError as e:
                 clear_terminal()
+                print(e)
                 print("Sorry Something Went Wrong, Please Fill the Info Again.")
                 continue
 
@@ -600,7 +619,8 @@ def greet_guest():
                 continue
             else:
                 break
-        except:
+        except ValueError as e:
+            print(e)
             print("Sorry Invalid Input Type, Please Revalidate Your Input!")
             continue
     return user_call
@@ -609,7 +629,6 @@ def get_user_acc_no():
     clear_terminal()
     print("Hello Customer, Welcome To The State Bank")
     while True:
-        # clear_terminal()
         print("Please Tell Us Your Account Number, For Further Processes.")
         user_acc_no = input("-->")
         if user_acc_no in state_bank.account_name_dict:
@@ -627,7 +646,8 @@ def get_user_acc_no():
                         continue
                     else:
                         break
-                except:
+                except ValueError as e:
+                    print(e)
                     print("Invalid Input Type, Please Revalidate Your Input.")
                     continue
             if user_act == 1:
@@ -651,7 +671,8 @@ def user_op(acc_no):
                 continue
             else:
                 break
-        except:
+        except ValueError as e:
+            print(e)
             print("Invalid Input Type, Please Revalidate Your Input.")
             continue
     if user_demand == 1:
@@ -665,7 +686,8 @@ def user_op(acc_no):
                     continue
                 else:
                     break
-            except:
+            except ValueError as e:
+                print(e)
                 print("Invalid Input Type, Please Try Again!")
                 continue
         state_bank.account_name_dict[acc_no].deposit(amount)
@@ -674,7 +696,7 @@ def user_op(acc_no):
     else:
         return
 
-# Serve When Ever A Guest Comes.
+# Serve when ever a guest comes.
 def serve_user():
     user_call = greet_guest()
     if user_call == 1:
@@ -684,7 +706,7 @@ def serve_user():
         if user_acc_no :
             user_op(user_acc_no)
 
-# Update Our Savings Data Base Before Closing The Program.
+# Update our savings data base before closing the program.
 def update_saving_db():
     with open(saving_DB, 'w') as file:
          for acc_no, account_obj in state_bank.account_name_dict.items():
@@ -692,7 +714,7 @@ def update_saving_db():
                 file.write(f"{account_obj.acc_no},{account_obj.acc_balance},{account_obj.with_limit}\n")
         
 
-# Update Our Business Data Base Before Closing The Program.
+# Update our business data base before closing the program.
 def update_business_db():
     with open(business_DB, 'w') as file:
         for acc_no, account_obj in state_bank.account_name_dict.items():
@@ -701,21 +723,21 @@ def update_business_db():
 
 
 def start_bank_app():
-    # Rebuild The Business Account Object In The RAM.
+    # Rebuild the business account object in the RAM.
     populate_business_acc()
-    # Rebuild The Savings Account Object In The RAM.
+    # Rebuild the savings account object in the RAM.
     populate_savings_acc()
-    # Rebuild The Users Object In The RAM.
+    # Rebuild the users object in the RAM.
     populate_users()
 
 
-# Make Our Banking System Live (Operationable).
-# Starting Our State Bank Object.
+# Make our banking system live.
+# Starting our state bank object.
 state_bank = bank("State Bank Of India")
 start_bank_app()
 
-# Executes Only, When Its The 1st Day Of A Month, Else Will Be Returned.
-update_monthly_intrest()
+# Executes only, when its the 1st day of a month, else will get returned.
+update_monthly_interest()
 
 
 if __name__ == "__main__":
@@ -745,15 +767,17 @@ if __name__ == "__main__":
                         else:
                             print("Thanks For Comming.")
                             break
-                    except:
+                    except ValueError as e:
+                        print(e)
                         print("Invaild Input Type, Please Try Again.")
                         continue
             else:
                 break
-        except:
+        except ValueError as e:
+            print(e)
             print("Invaild Input Type, Please Try Again.")
             continue
 
-    # After All The Execution Load All The Accounts Object Info Into The Data Base.
+    # After all the execution load all the accounts object informations into the files.
     update_saving_db()
     update_business_db()
