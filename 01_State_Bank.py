@@ -317,8 +317,8 @@ def generate_pin():
 # Updating the savings account in monthly basis.
 def get_pin_list():
     pin_list = []
-    pin_set
-    pin_DB
+    global pin_set
+    global pin_DB
     if not os.path.exists(pin_DB) or os.path.getsize(pin_DB) == 0:
         print("Failed To Fetch The Info From The Pin Data Base!")
         return pin_list
@@ -340,7 +340,7 @@ def get_pin_list():
     return pin_list
 
     
-def update_monthly_inetrest():
+def update_monthly_interest():
     # Check if today's date is exactly day-1
     today = datetime.now()
     if today.day != 1:
@@ -348,7 +348,7 @@ def update_monthly_inetrest():
         return 
     print("Windows Scheduler Activated, Batch Processing Starting...")
 
-    saving_DB
+    global saving_DB
     # Quick safety check: if the database file doesn't exist yet, stop early.
     if not os.path.exists(saving_DB) or os.path.getsize(saving_DB) == 0:
         print("Failed To Find The Saving Accounts Data Base!")
@@ -402,7 +402,7 @@ def clear_terminal():
 
 # Populating the savings accounts.
 def populate_savings_acc():
-    saving_DB
+    global saving_DB
     # Check if the dataBase exists.
     if not os.path.exists(saving_DB) or os.path.getsize(saving_DB) == 0:
         print("Failed To Fetch The Info From The Account Data Base!")
@@ -460,7 +460,7 @@ def populate_savings_acc():
 
 # Populating the business accounts.
 def populate_business_acc():
-    business_DB
+    global business_DB
     # Chack if the dataBase exists.
     if not os.path.exists(business_DB) or os.path.getsize(business_DB) == 0:
         print("Failed To Fetch The Account Info From The Data Base.")
@@ -512,7 +512,7 @@ def populate_business_acc():
 
 # Populating the previous users.
 def populate_users():
-    user_DB
+    global user_DB
     if not os.path.exists(user_DB) or os.path.getsize(user_DB) == 0:
         print("Failed To Find The User Data Base!")
         return
@@ -604,6 +604,8 @@ def new_user():
             file.write(f"{acc_no},{acc_balance},{acc_pin}\n")
         print(f"Hey {user_name} Your Account {acc_no} Is Sucessfully Been Created In Our State_Bank.")
         print(f"Here Is Your 6 Digit Pin : {acc_pin}\nPlease Remeber It.")
+        _ = input("\nPlaese Hit (Enter) To Exit")
+        return acc_no
 
 def greet_guest():
     while True:
@@ -700,7 +702,8 @@ def user_op(acc_no):
 def serve_user():
     user_call = greet_guest()
     if user_call == 1:
-        new_user()
+        user_acc_no = new_user()
+        user_op(user_acc_no)
     elif user_call == 2:
         user_acc_no = get_user_acc_no()
         if user_acc_no :
