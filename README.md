@@ -20,7 +20,7 @@ sessions.
 
 
 
-- ## Technologies Used
+## Technologies Used
 
 - Python
 - File Handling
