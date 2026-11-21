@@ -32,7 +32,7 @@ class bank:
     def get_serial(self):
         curr_serial = len(self.account_name_dict)    # get the current serial no.
         next_serial = curr_serial + 1                # get the next serial no.
-        dynamic_serial = f"{next_serial:05d}"        # convert the serial to be dynamic, to dit in 5 digits.
+        dynamic_serial = f"{next_serial:05d}"        # convert the serial to be dynamic, to fit in 5 digits.
         return dynamic_serial                        # return the dynamic serial number.
 
 class customer:
@@ -195,7 +195,7 @@ class business_account:
 
 class saving_account(business_account):
     account_type = 'savings'
-    # Now saving account will have its own unique constraints.
+    # now saving account will have its own unique constraints.
     withdraw_limit = 25000
     annual_interest = 6.7
     acc_withdraw_limit = 3
@@ -341,7 +341,7 @@ def get_pin_list():
 
     
 def update_monthly_interest():
-    # Check if today's date is exactly day-1
+    # Check if today's date is exactly first day of a month
     today = datetime.now()
     if today.day != 1:
         # If it's not the 1st of the month, immediately stop and do nothing!
@@ -384,7 +384,7 @@ def update_monthly_interest():
                     Account_obj = saving_account(acc_no, acc_balance, acc_pin, acc_with_limit)
                     active_objects_list.append(Account_obj)
 
-        # Compound and update the balance for each account.
+        # compound and update the balance for each account.
         for items in active_objects_list:
             items.compounding()
             items.with_limit = 0
